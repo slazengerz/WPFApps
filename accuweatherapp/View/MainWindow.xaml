@@ -1,0 +1,77 @@
+﻿<Window x:Class="AccuWeatherApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AccuWeatherApp"
+        xmlns:vm="clr-namespace:AccuWeatherApp.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="300">
+    <Window.Resources>
+        <vm:MainViewModel x:Key="mvm"></vm:MainViewModel>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource mvm}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="77"/>
+            <RowDefinition Height="157*"/>
+            <RowDefinition Height="185*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="City Query"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center" Height="28" Margin="0,26,0,23"/>
+        <TextBox Text="{Binding Source={StaticResource mvm},Path=Query,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Width="145" Height="30" 
+                   Margin="123,24,24,23"/>
+        <ListView
+                  ItemsSource="{Binding Source={StaticResource mvm},
+                  Path=LocationResults}" Margin="0,35,0,0" Grid.Row="1"
+                  SelectedItem="{Binding Source={StaticResource mvm},Path=SelectedItem,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock>
+                        <Run Text="{Binding Key}"/>
+                         <Run Text=","/>
+                        <Run Text="{Binding LocalizedName}"/>
+                    </TextBlock>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <StackPanel Grid.Row="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="24*"/>
+                    <ColumnDefinition Width="49*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Temperature"
+                           Style ="{StaticResource display}"/>
+                <TextBlock
+                           Grid.Column="1"
+                           Style="{StaticResource display}">
+                    <Run Text="{Binding Path=CurrentConditions.Temperature.Metric.Value}"/>
+                    <Run Text=" "/>
+                    <Run Text="{Binding Path=CurrentConditions.Temperature.Metric.Unit}"/>
+                </TextBlock>
+                <TextBlock Text="WeatherText"
+                           Style="{StaticResource display}"
+                           Grid.Row="1"
+                           />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Style="{StaticResource display}"
+                           Text="{Binding Source={StaticResource mvm},Path=CurrentConditions.WeatherText,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,7,10,7" Height="16"/>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>
